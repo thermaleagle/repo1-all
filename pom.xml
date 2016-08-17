@@ -5,48 +5,31 @@
 	<artifactId>repo1</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
-		<my.repo1.url>https://github.com/thermaleagle/repo1.git</my.repo1.url>
 		<my.repo2.url>https://github.com/thermaleagle/repo2.git</my.repo2.url>
 	</properties>
 	<build>
 		<plugins>
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-scm-plugin</artifactId> 
-				<version>1.6</version> <configuration> <goals>checkout</goals> <checkoutDirectory>target/checkout</checkoutDirectory> 
-				<username>username</username> <password>userpassword</password> </configuration> 
-				<executions> <execution> <id>check-out-project1</id> <phase>generate-sources</phase> 
-				<goals> <goal>checkout</goal> </goals> </execution> </executions> </plugin> -->
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-scm-plugin</artifactId>
-				<version>1.9.4</version>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.4.0</version>
 				<executions>
 					<execution>
-						<id>repo1-dependency</id>
-						<phase>generate-sources</phase>
-						<configuration>
-							<connectionUrl>${my.repo1.url}</connectionUrl>
-							<scmVersion>master</scmVersion>
-							<scmVersionType>branch</scmVersionType>
-							<checkoutDirectory>${project.build.directory}/${my.repo1}-${my.repo1.branch}</checkoutDirectory>
-						</configuration>
+						<phase>initialize</phase>
+						<id>clone_and_test_compile</id>
 						<goals>
-							<goal>checkout</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>repo2-dependency</id>
-						<phase>generate-sources</phase>
-						<configuration>
-							<connectionUrl>${my.repo2.url}</connectionUrl>
-							<scmVersion>master</scmVersion>
-							<scmVersionType>branch</scmVersionType>
-							<checkoutDirectory>${project.build.directory}/${my.repo2}-${my.repo2.branch}</checkoutDirectory>
-						</configuration>
-						<goals>
-							<goal>checkout</goal>
+							<goal>exec</goal>
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<executable>git</executable>
+					<arguments>
+						<argument>clone</argument>
+						<argument>${my.repo2.url}</argument>
+						<argument>../${module_for_test}</argument>
+					</arguments>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
