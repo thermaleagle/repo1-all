@@ -1,12 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>repo1</groupId>
-	<artifactId>repo1</artifactId>
+	<groupId>repo1-all</groupId>
+	<artifactId>repo1-all</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
 	<properties>
+		<my.repo1.url>https://github.com/thermaleagle/repo1.git</my.repo1.url>
 		<my.repo2.url>https://github.com/thermaleagle/repo2.git</my.repo2.url>
 	</properties>
+
+	<!-- <modules> <module>repo1</module> </modules> -->
+
 	<build>
 		<plugins>
 			<plugin>
@@ -16,21 +21,74 @@
 				<executions>
 					<execution>
 						<phase>initialize</phase>
-						<id>clone_and_test_compile</id>
+						<id>clone_repo_1</id>
 						<goals>
 							<goal>exec</goal>
 						</goals>
+						<configuration>
+							<executable>git</executable>
+							<arguments>
+								<argument>clone</argument>
+								<argument>${my.repo1.url}</argument>
+								<argument>./repo1</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<phase>initialize</phase>
+						<id>clone_repo_2</id>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>git</executable>
+							<arguments>
+								<argument>clone</argument>
+								<argument>${my.repo2.url}</argument>
+								<argument>./repo2</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<phase>initialize</phase>
+						<id>build_repo_1</id>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>mvn</executable>
+							<arguments>
+								<argument>clean</argument>
+								<argument>install</argument>
+								<argument>-f</argument>
+								<argument>repo1/pom.xml</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<phase>initialize</phase>
+						<id>build_repo_2</id>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>mvn</executable>
+							<arguments>
+								<argument>clean</argument>
+								<argument>install</argument>
+								<argument>-f</argument>
+								<argument>repo2/pom.xml</argument>
+							</arguments>
+						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<executable>git</executable>
-					<arguments>
-						<argument>clone</argument>
-						<argument>${my.repo2.url}</argument>
-						<argument>../${module_for_test}</argument>
-					</arguments>
-				</configuration>
 			</plugin>
+			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>exec-maven-plugin</artifactId> 
+				<version>1.4.0</version> <executions> <execution> <phase>initialize</phase> 
+				<id>clone_and_test_compile2</id> <goals> <goal>exec</goal> </goals> </execution> 
+				</executions> <configuration> <executable>git</executable> <arguments> <argument>clone</argument> 
+				<argument>${my.repo2.url}</argument> <argument>./repo2</argument> </arguments> 
+				</configuration> </plugin> -->
 		</plugins>
 	</build>
 </project>
